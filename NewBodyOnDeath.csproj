@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<RootNamespace>MadBro.NewBodyOnDeath</RootNamespace>
+	<AssemblyName>NewBodyOnDeath</AssemblyName>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<TarkovDir Condition=" '$(TarkovDir)' == '' ">E:\SPT 4 Modding\</TarkovDir>
+		<TarkovPluginsSPTDir>$(TarkovDir)BepInEx\plugins\spt\</TarkovPluginsSPTDir>
+		<TarkovManagedDir>$(TarkovDir)EscapeFromTarkov_Data\Managed\</TarkovManagedDir>
+		<TarkovBepInExCoreDir>$(TarkovDir)BepInEx\core\</TarkovBepInExCoreDir>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PostBuildEvent>
+		</PostBuildEvent>
+	</PropertyGroup>
+	
+	<Target Name="CopyDll" AfterTargets="PostBuildEvent">
+		<ItemGroup>
+			<OutputDLL Include="$(ProjectDir)$(OutDir)$(TargetName).dll" />
+		</ItemGroup>
+		<!-- Copies the output to tarkov game folder -->
+		<Copy SourceFiles="@(OutputDLL)" DestinationFolder="$(TarkovDir)SPT\user\mods\NewBodyOnDeath\%(RecursiveDir)" />
+		<!-- Delete previous build folder -->
+		<RemoveDir Directories="$(ProjectDir)BuildScripts\Build" />
+		<!-- Copy dll to build folder -->
+		<Copy SourceFiles="@(OutputDLL)" DestinationFolder="$(ProjectDir)BuildScripts\Build\SPT\user\mods\NewBodyOnDeath\%(RecursiveDir)" />
+	</Target>
+	<Target Name="RunPackModScript" AfterTargets="CopyDll">
+		<ItemGroup>
+			<OutputDLL Include="$(ProjectDir)$(OutDir)$(TargetName).dll" />
+			<OutputDir Include="$(ProjectDir)" />
+		</ItemGroup>
+		<Exec Condition="'$(Configuration)' == 'Release'" Command="powershell -ExecutionPolicy Bypass -File &quot;$(OutputDir)BuildScripts\PackModRelease.ps1&quot;" />
+	</Target>
+	<ItemGroup>
+	  <PackageReference Include="SemanticVersioning" Version="3.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="SPTarkov.Common">
+	    <HintPath>$(TarkovDir)SPT\SPTarkov.Common.dll</HintPath>
+	  </Reference>
+	  <Reference Include="SPTarkov.DI">
+	    <HintPath>$(TarkovDir)SPT\SPTarkov.DI.dll</HintPath>
+	  </Reference>
+	  <Reference Include="SPTarkov.Server.Core">
+	    <HintPath>$(TarkovDir)SPT\SPTarkov.Server.Core.dll</HintPath>
+	  </Reference>
+		<Reference Include="SPTarkov.Reflection">
+			<HintPath>$(TarkovDir)SPT\SPTarkov.Reflection.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	
+</Project>
