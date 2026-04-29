@@ -32,26 +32,18 @@ namespace MadBro.NewBodyOnDeath
     }
 
     [Injectable(TypePriority = OnLoadOrder.PreSptModLoader)]
-    //[Injectable(TypePriority = OnLoadOrder.Watermark)]
-    public class NewBodyOnDeathPatch(
-        ISptLogger<HealthHelper> logger,
-        TimeUtil timeUtil,
-        ConfigServer configServer,
-        ServerLocalisationService localisationService
-        //) : HealthHelper(logger, timeUtil, configServer)
-        ) : IOnLoad
+    public class Plugin(ISptLogger<HealthHelper> logger) : IOnLoad
     {
         public Task OnLoad()
         {
-            // You will need to enable your patch in an OnLoad, preferably during PreSptModLoader
-            new MyPatch().Enable();
+            new NewBodyOnDeathPatch().Enable();
 
             logger.Success($"NBoD harmony patch has successfully loaded!");
 
             return Task.CompletedTask;
         }
 
-        public class MyPatch() : AbstractPatch
+        public class NewBodyOnDeathPatch() : AbstractPatch
         {
             protected override MethodBase GetTargetMethod()
             {
@@ -81,7 +73,6 @@ namespace MadBro.NewBodyOnDeath
                 //logger.Info("NBoD He not dead");
                 return true;
             }
-
 
             private static void MaxHydroEnergyTemp(ISptLogger<HealthHelper> logger, PmcData profileToUpdate, BotBaseHealth healthChanges, bool isDead)
             {
