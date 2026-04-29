@@ -16,7 +16,7 @@ namespace MadBro.NewBodyOnDeath
 {
     public record ModMetadata : AbstractModMetadata
     {
-        public override string ModGuid { get; init; } = "com.sp-tarkov.madbro.newBodyOnDeath";
+        public override string ModGuid { get; init; } = "madbro.newbodyondeath";
         public override string Name { get; init; } = "NewBodyOnDeath";
         public override string Author { get; init; } = "MadBrother";
         public override List<string>? Contributors { get; init; }
