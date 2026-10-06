@@ -20,7 +20,7 @@ namespace MadBro.NewBodyOnDeath
         public override string Name { get; init; } = "NewBodyOnDeath";
         public override string Author { get; init; } = "MadBrother";
         public override List<string>? Contributors { get; init; }
-        public override SemanticVersioning.Version Version { get; init; } = new("1.0.0");
+        public override SemanticVersioning.Version Version { get; init; } = new("1.0.1");
         public override SemanticVersioning.Range SptVersion { get; init; } = new("~4.0.0");
 
 
@@ -103,6 +103,16 @@ namespace MadBro.NewBodyOnDeath
                     // Process each effect for each part
                     foreach (var (key, _) in partProperties.Effects ?? [])
                     {
+                        if (key == "MildMusclePain" || key == "SevereMusclePain")
+                        {
+                            matchingProfilePart.Effects.TryGetValue(key, out var effect);
+                            if (effect is not null)
+                            {
+                                effect.Time = 0;
+                            }
+                            continue;
+                        }
+
                         matchingProfilePart.Effects ??= [];
                         if (matchingProfilePart.Effects.ContainsKey(key))
                         {
